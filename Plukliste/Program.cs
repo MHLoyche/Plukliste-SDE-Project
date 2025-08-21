@@ -1,4 +1,6 @@
 ﻿//Eksempel på funktionel kodning hvor der kun bliver brugt et model lag
+using System.Net.Quic;
+
 namespace Plukliste;
 
 class PluklisteProgram { 
@@ -10,6 +12,8 @@ class PluklisteProgram {
         List<string> files;
         var index = -1;
         var standardColor = Console.ForegroundColor;
+        Pluklist plukliste;
+
         Directory.CreateDirectory("import");
 
         if (!Directory.Exists("export"))
@@ -26,7 +30,7 @@ class PluklisteProgram {
             if (files.Count == 0)
             {
                 Console.WriteLine("No files found.");
-
+                return;
             }
             else
             {
@@ -39,7 +43,7 @@ class PluklisteProgram {
                 FileStream file = File.OpenRead(files[index]);
                 System.Xml.Serialization.XmlSerializer xmlSerializer =
                     new System.Xml.Serialization.XmlSerializer(typeof(Pluklist));
-                var plukliste = (Pluklist?)xmlSerializer.Deserialize(file);
+                plukliste = (Pluklist?)xmlSerializer.Deserialize(file);
 
                 //print plukliste
                 if (plukliste != null && plukliste.Lines != null)
@@ -108,6 +112,7 @@ class PluklisteProgram {
                     if (index < files.Count - 1) index++;
                     break;
                 case 'A':
+                    PrintHTML.Print(plukliste);
                     //Move files to import directory
                     var filewithoutPath = files[index].Substring(files[index].LastIndexOf('\\'));
                     File.Move(files[index], string.Format(@"import\\{0}", filewithoutPath));
