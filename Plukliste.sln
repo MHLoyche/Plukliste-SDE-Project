@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plukliste", "Plukliste\Pluk
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLibrary", "Temp\ClassLibrary.csproj", "{2F5E68B6-2002-4300-AED3-86A850B2181A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiBackend", "ApiBackend\ApiBackend.csproj", "{1F635D83-B610-4C80-A920-3196AA974B02}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +26,10 @@ Global
 		{2F5E68B6-2002-4300-AED3-86A850B2181A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F5E68B6-2002-4300-AED3-86A850B2181A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F5E68B6-2002-4300-AED3-86A850B2181A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F635D83-B610-4C80-A920-3196AA974B02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F635D83-B610-4C80-A920-3196AA974B02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F635D83-B610-4C80-A920-3196AA974B02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F635D83-B610-4C80-A920-3196AA974B02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
