@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Plukliste
+namespace ClassLibrary
 {
-    internal class PrintHTML
+    public class PrintHTML
     {
         public static void Print(Pluklist plukliste)
         {

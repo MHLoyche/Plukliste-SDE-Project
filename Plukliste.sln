@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plukliste", "Plukliste\Plukliste.csproj", "{5F7A0C0F-E7EE-4871-B195-9FEDEBA7143E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2F5E68B6-2002-4300-AED3-86A850B2181A} = {2F5E68B6-2002-4300-AED3-86A850B2181A}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLibrary", "Temp\ClassLibrary.csproj", "{2F5E68B6-2002-4300-AED3-86A850B2181A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{5F7A0C0F-E7EE-4871-B195-9FEDEBA7143E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F7A0C0F-E7EE-4871-B195-9FEDEBA7143E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F7A0C0F-E7EE-4871-B195-9FEDEBA7143E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F5E68B6-2002-4300-AED3-86A850B2181A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F5E68B6-2002-4300-AED3-86A850B2181A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F5E68B6-2002-4300-AED3-86A850B2181A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F5E68B6-2002-4300-AED3-86A850B2181A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

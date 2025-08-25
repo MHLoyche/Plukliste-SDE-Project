@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Pluklist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Jørgen Hansen</Name>
+  <Forsendelse>GLS</Forsendelse>
+  <Adresse>Kertemindevej 66, 5400 Bogense</Adresse>
+  <Lines>
+    <Item>
+      <ProductID>TX-302587</ProductID>
+      <Title>Triax TD 241E stikdås</Title>
+      <Type>Fysisk</Type>
+      <Amount>1</Amount>
+    </Item>
+    <Item>
+      <ProductID>NETGEAR-CM1000</ProductID>
+      <Title>NETGEAR DOCSIS 3.1 (CM1000)</Title>
+      <Type>Fysisk</Type>
+      <Amount>1</Amount>
+    </Item>
+    <Item>
+      <ProductID>PRINT-WELCOME</ProductID>
+      <Title>Velkomstbrev</Title>
+      <Type>Print</Type>
+      <Amount>1</Amount>
+    </Item>
+    <Item>
+      <ProductID>#830012</ProductID>
+      <Title>Papkasse 170x105x60</Title>
+      <Type>Fysisk</Type>
+      <Amount>1</Amount>
+    </Item>
+  </Lines>
+</Pluklist>

@@ -1,5 +1,6 @@
 ﻿//Eksempel på funktionel kodning hvor der kun bliver brugt et model lag
 using System.Net.Quic;
+using ClassLibrary;
 
 namespace Plukliste;
 

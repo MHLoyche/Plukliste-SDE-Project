@@ -1,4 +1,4 @@
-﻿namespace Plukliste;
+﻿namespace ClassLibrary;
 public class Pluklist
 {
     public string? Name;
