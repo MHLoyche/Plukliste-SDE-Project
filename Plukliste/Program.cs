@@ -1,6 +1,7 @@
 ﻿//Eksempel på funktionel kodning hvor der kun bliver brugt et model lag
 using System.Net.Quic;
 using ClassLibrary;
+using Temp;
 
 namespace Plukliste;
 
@@ -14,6 +15,7 @@ class PluklisteProgram {
         var index = -1;
         var standardColor = Console.ForegroundColor;
         Pluklist plukliste;
+        FileConverter fileConv = new FileConverter();
 
         Directory.CreateDirectory("import");
 
@@ -25,6 +27,7 @@ class PluklisteProgram {
         }
         files = Directory.EnumerateFiles("export").ToList();
 
+        Console.WriteLine(Directory.GetCurrentDirectory());
         //ACT
         while (readKey != 'Q')
         {
@@ -121,9 +124,16 @@ class PluklisteProgram {
                     files.Remove(files[index]);
                     if (index == files.Count) index--;
                     break;
+                case 'R':
+                    fileConv.read(plukliste);
+                    Console.WriteLine($"Plukseddel {files[index]} er læst.");
+                    
+                    break;
+
             }
             Console.ForegroundColor = standardColor; //reset color
 
         }
+        
     }
 }

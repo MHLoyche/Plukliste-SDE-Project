@@ -26,19 +26,19 @@ namespace ClassLibrary
             {
                 if (item.ProductID == "PRINT-OPGRADE" || item.ProductID == "PRINT-WELCOME")
                 {
-                    string html = File.ReadAllText("C:\\Users\\AweSa\\source\\repos\\Plukliste-master\\Plukliste\\HTML-Templates\\" + item.ProductID + ".html");
+                    string html = File.ReadAllText(Path.Combine("HTML-Templates", item.ProductID + ".html"));
                     html = html.Replace("[Name]", plukliste.Name);
                     html = html.Replace("[Adresse]", plukliste.Adresse);
                     html = html.Replace("[Plukliste]", fysiskeItemsString);
 
-                    File.WriteAllLines($"C:\\Users\\AweSa\\source\\repos\\Plukliste-master\\Plukliste\\Print\\{plukliste.Name}.html", new string[] { html });
+                    File.WriteAllLines(Path.Combine("Print", plukliste.Name + ".html"), new string[] { html });
                 } else if (item.ProductID == "PRINT-OPSIGELSE")
                 {
-                    string html = File.ReadAllText("C:\\Users\\AweSa\\source\\repos\\Plukliste-master\\Plukliste\\HTML-Templates\\PRINT-OPSIGELSE.html");
+                    string html = File.ReadAllText(Path.Combine("HTML-Templates", "PRINT-OPSIGELSE.html"));
                     html = html.Replace("[Name]", plukliste.Name);
                     html = html.Replace("[Adresse]", plukliste.Adresse);
 
-                    File.WriteAllLines($"C:\\Users\\AweSa\\source\\repos\\Plukliste-master\\Plukliste\\Print\\{plukliste.Name}.html", new string[] { html });
+                    File.WriteAllLines(Path.Combine("Print", plukliste.Name +".html"), new string[] { html });
                 }
             }
         }
