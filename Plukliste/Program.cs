@@ -15,7 +15,7 @@ class PluklisteProgram {
         var index = -1;
         var standardColor = Console.ForegroundColor;
         Pluklist plukliste;
-        FileConverter fileConv = new FileConverter();
+        XMLToCSVConverter fileConv = new XMLToCSVConverter();
 
         Directory.CreateDirectory("import");
 
@@ -97,6 +97,11 @@ class PluklisteProgram {
             Console.ForegroundColor = standardColor;
             Console.WriteLine("enindlæs pluksedler");
 
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("S");
+            Console.ForegroundColor = standardColor;
+            Console.WriteLine("can plukliste");
+
             readKey = Console.ReadKey().KeyChar;
             if (readKey >= 'a') readKey -= (char)('a' - 'A'); //HACK: To upper
             Console.Clear();
@@ -124,10 +129,9 @@ class PluklisteProgram {
                     files.Remove(files[index]);
                     if (index == files.Count) index--;
                     break;
-                case 'R':
+                case 'S':
                     fileConv.read(plukliste);
                     Console.WriteLine($"Plukseddel {files[index]} er læst.");
-                    
                     break;
 
             }
@@ -135,5 +139,6 @@ class PluklisteProgram {
 
         }
         
+        fileConv.convert();
     }
 }

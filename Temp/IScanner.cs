@@ -8,7 +8,7 @@ namespace ClassLibrary
 {
     internal interface IScanner
     {
-        void convert(Dictionary<string, int> content);
+        void convert();
         void read(Pluklist content);
     }
 }
