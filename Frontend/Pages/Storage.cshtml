@@ -1,0 +1,66 @@
+﻿@page
+@model Frontend.Pages.StorageModel
+@{
+}
+
+@{
+    ViewData["Title"] = "Storage";
+}
+
+<h1>Storage System</h1>
+
+
+<table id="itemsTable" border="1" cellpadding="5">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Product Name</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Data will be populated here by JavaScript -->
+    </tbody>
+</table>
+
+<script>
+    // Fetch data from your API
+    fetch("https://localhost:7148/storage/items") // ✅ wrapped in quotes
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok " + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("API response:", data); // ✅ log JSON to browser console
+
+            const tbody = document.querySelector("#itemsTable tbody");
+
+            // Loop through the JSON object
+            for (const [id, item] of Object.entries(data)) {
+                const row = document.createElement("tr");
+
+                // ID column
+                const idCell = document.createElement("td");
+                idCell.textContent = id;
+                row.appendChild(idCell);
+
+                // Name column
+                const nameCell = document.createElement("td");
+                nameCell.textContent = item.name;
+                row.appendChild(nameCell);
+
+                // Amount column
+                const amountCell = document.createElement("td");
+                amountCell.textContent = item.amount;
+                row.appendChild(amountCell);
+
+                // Add row to table
+                tbody.appendChild(row);
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching storage items:", error);
+        });
+</script>
