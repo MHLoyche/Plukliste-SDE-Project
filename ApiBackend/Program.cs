@@ -1,7 +1,5 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -11,16 +9,15 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         policy =>
         {
+            // Allows anything to speak to the API backend
             policy.AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader();
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
         });
 });
 
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -29,6 +26,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Enable CORS middleware BEFORE mapping endpoints
+app.UseCors("AllowFrontend");
+
 app.MapGet("/storage/items", () =>
 {
     using (StreamReader reader = new StreamReader("DatabaseData/Data.json"))
@@ -36,10 +36,8 @@ app.MapGet("/storage/items", () =>
         string json = reader.ReadToEnd();
         return Results.Content(json, "application/json");
     }
-    
 })
 .WithName("getitems")
 .WithOpenApi();
 
 app.Run();
-

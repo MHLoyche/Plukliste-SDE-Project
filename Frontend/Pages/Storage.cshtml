@@ -18,49 +18,47 @@
             <th>Amount</th>
         </tr>
     </thead>
-    <tbody>
-        <!-- Data will be populated here by JavaScript -->
-    </tbody>
+    <tbody></tbody>
 </table>
 
 <script>
-    // Fetch data from your API
-    fetch("https://localhost:7148/storage/items") // ✅ wrapped in quotes
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok " + response.statusText);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("API response:", data); // ✅ log JSON to browser console
+    // Run after DOM is ready
+    document.addEventListener("DOMContentLoaded", () => {
+      loadItems();
+    });
 
-            const tbody = document.querySelector("#itemsTable tbody");
+    // Fetches the items from the API and populates the table.
+    async function loadItems() {
+      const tbody = document.querySelector("#itemsTable tbody");
+      tbody.innerHTML = ""; // optional: clear existing rows
 
-            // Loop through the JSON object
-            for (const [id, item] of Object.entries(data)) {
-                const row = document.createElement("tr");
+      try {
+        const res = await fetch("https://localhost:7148/storage/items");
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status} ${res.statusText}`);
+        }
 
-                // ID column
-                const idCell = document.createElement("td");
-                idCell.textContent = id;
-                row.appendChild(idCell);
+        const data = await res.json();
+        console.log("API response:", data); // <-- safe: inside the same scope
 
-                // Name column
-                const nameCell = document.createElement("td");
-                nameCell.textContent = item.name;
-                row.appendChild(nameCell);
+        // Inserts the data from the JSON file.
+        for (const [id, item] of Object.entries(data)) {
+          const tr = document.createElement("tr");
 
-                // Amount column
-                const amountCell = document.createElement("td");
-                amountCell.textContent = item.amount;
-                row.appendChild(amountCell);
+          const tdId = document.createElement("td");
+          tdId.textContent = id;
 
-                // Add row to table
-                tbody.appendChild(row);
-            }
-        })
-        .catch(error => {
-            console.error("Error fetching storage items:", error);
-        });
+          const tdName = document.createElement("td");
+          tdName.textContent = item.name;
+
+          const tdAmount = document.createElement("td");
+          tdAmount.textContent = item.amount;
+
+          tr.append(tdId, tdName, tdAmount);
+          tbody.appendChild(tr);
+        }
+      } catch (err) {
+        console.error("Error fetching storage items:", err);
+      }
+    }
 </script>

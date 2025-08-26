@@ -10,5 +10,17 @@
   "3": {
     "name": "NETGEAR3",
     "amount": 15
+  },
+  "4": {
+    "name": "NETGEAR4",
+    "amount": 9
+  },
+  "5": {
+    "name": "NETGEAR5",
+    "amount": 5
+  },
+  "6": {
+    "name": "NETGEAR6",
+    "amount": 15
   }
 }
