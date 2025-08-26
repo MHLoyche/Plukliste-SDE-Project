@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Pluklist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Jens Jørgensen</Name>
+  <Forsendelse>GLS</Forsendelse>
+  <Adresse>Odensevej 46, 5000 Odense C</Adresse>
+  <Lines>
+    <Item>
+      <ProductID>PRINT-OPSIGELSE</ProductID>
+      <Title>Tak for denne gang</Title>
+      <Type>Print</Type>
+      <Amount>1</Amount>
+    </Item>
+    <Item>
+      <ProductID>#830012</ProductID>
+      <Title>Papkasse 170x105x60</Title>
+      <Type>Fysisk</Type>
+      <Amount>1</Amount>
+    </Item>
+    <Item>
+      <ProductID>LABEL-RETUR</ProductID>
+      <Title>Retur label</Title>
+      <Type>Fysisk</Type>
+      <Amount>1</Amount>
+    </Item>
+  </Lines>
+</Pluklist>

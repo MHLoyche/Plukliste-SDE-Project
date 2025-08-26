@@ -14,5 +14,13 @@
   "F-CONN": {
     "name": "F-Connector, 8mm",
     "amount": 900
+  },
+  "#830012": {
+    "name": "Papkasse 170x105x60",
+    "amount": 1750
+  },
+  "LABEL-RETUR": {
+    "name": "Returlabel",
+    "amount": 9001
   }
 }

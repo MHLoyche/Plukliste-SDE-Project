@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Pluklist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Peter Jørgensen</Name>
+  <Forsendelse>Post Nord</Forsendelse>
+  <Adresse>Odensevej 97, 5300 Kerteminde</Adresse>
+  <Lines>
+    <Item>
+      <ProductID>NETGEAR-CM1000</ProductID>
+      <Title>NETGEAR DOCSIS 3.1 (CM1000)</Title>
+      <Type>Fysisk</Type>
+      <Amount>1</Amount>
+    </Item>
+    <Item>
+      <ProductID>PRINT-OPGRADE</ProductID>
+      <Title>Vejledning Opgradering</Title>
+      <Type>Print</Type>
+      <Amount>1</Amount>
+    </Item>
+    <Item>
+      <ProductID>#830012</ProductID>
+      <Title>Papkasse 170x105x60</Title>
+      <Type>Fysisk</Type>
+      <Amount>1</Amount>
+    </Item>
+    <Item>
+      <ProductID>LABEL-RETUR</ProductID>
+      <Title>Retur label</Title>
+      <Type>Fysisk</Type>
+      <Amount>1</Amount>
+    </Item>
+  </Lines>
+</Pluklist>

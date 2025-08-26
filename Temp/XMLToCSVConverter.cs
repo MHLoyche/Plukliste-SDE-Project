@@ -5,12 +5,13 @@ using System.Xml.Serialization;
 using CsvHelper;
 using CsvHelper.Configuration;
 using System.Globalization;
+using System.Net.Http.Json;
 
 namespace Temp
 {
     public class XMLToCSVConverter : IScanner
     {
-        private Dictionary<string, int> tempDic = new Dictionary<string, int>();
+        private Dictionary<string, int> tempDic = new ();
         List<string> myList = new List<string>();
         List<string> list = new List<string>();
         int ID = 63834656;
@@ -18,30 +19,41 @@ namespace Temp
 
         public void convert()
         {
-            using (var writer = new StreamWriter("export//" + ID + "_" + DeliveryMan + ".csv"))
-            using (var csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture) { 
-                Delimiter = ";" }
-            ))
+            // fetch storage
+            var http = new HttpClient();
+            var storage = http.GetFromJsonAsync<Dictionary<string, StorageItem>>(
+                              "https://localhost:7148/storage/items")
+                          .GetAwaiter().GetResult()
+                       ?? new();
 
+            // Import is the save location and export is the read location
+            using var writer = new StreamWriter($"import/{ID}_{DeliveryMan}.csv");
+            using var csv = new CsvWriter(writer,
+                new CsvConfiguration(CultureInfo.InvariantCulture) { Delimiter = ";" });
+
+            csv.WriteField("ProductID");
+            csv.WriteField("Type");
+            csv.WriteField("Description");
+            csv.WriteField("Amount");      // ordered (your existing value)
+            csv.WriteField("CurrentStock"); // ← add this column
+            csv.NextRecord();
+
+            int counter = 0;
+            foreach (var item in tempDic) // item.Key = Title, item.Value = ordered
             {
-                csv.WriteField("ProductID");
-                csv.WriteField("Type");
-                csv.WriteField("Description");
-                csv.WriteField("Amount");
-                csv.NextRecord();
+                var productId = list[counter]; // assumes this aligns with the same product
+                var currentStock = storage.TryGetValue(productId, out var s) ? s.Amount : 0;
 
-                int counter = 0;
-                foreach (var item in tempDic)
-                {
-                    csv.WriteField(list[counter]);
-                    csv.WriteField("Fysisk");
-                    csv.WriteField(item.Key);
-                    csv.WriteField(item.Value);
-                    csv.NextRecord();
-                    counter++;
-                }
-            } 
+                csv.WriteField(productId);
+                csv.WriteField("Fysisk");
+                csv.WriteField(item.Key);      // Title
+                csv.WriteField(item.Value);    // Ordered
+                csv.WriteField(currentStock);  // ← DB amount only
+                csv.NextRecord();
+                counter++;
+            }
         }
+
         public void read(Pluklist content)
         {
             foreach (Item line in content.Lines)
@@ -61,4 +73,10 @@ namespace Temp
             }
         }
     }
+}
+
+public class StorageItem
+{
+    public string Name { get; set; } = "";
+    public int Amount { get; set; }
 }
