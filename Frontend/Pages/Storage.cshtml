@@ -21,10 +21,20 @@
     <tbody></tbody>
 </table>
 
+<button class="Refresh_Button" border="1">
+    Refresh
+</button>
+
+
 <script>
     // Run after DOM is ready
-    document.addEventListener("DOMContentLoaded", () => {
+     document.addEventListener("DOMContentLoaded", () => {
+      // Load once when the page starts
       loadItems();
+
+      // Attach event listener to refresh button
+      document.querySelector(".Refresh_Button")
+              .addEventListener("click", loadItems);
     });
 
     // Fetches the items from the API and populates the table.
@@ -62,3 +72,4 @@
       }
     }
 </script>
+

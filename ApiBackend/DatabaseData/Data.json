@@ -1,26 +1,18 @@
 {
-  "1": {
-    "name": "NETGEAR",
-    "amount": 9
+  "TX-302587": {
+    "name": "Triax TD 241E Stikdås",
+    "amount": 100
   },
-  "2": {
-    "name": "NETGEAR2",
-    "amount": 5
+  "NETGEAR-CM1000": {
+    "name": "NETGEAR DOCSIS 3.1 (CM1000)",
+    "amount": 85
   },
-  "3": {
-    "name": "NETGEAR3",
-    "amount": 15
+  "COAX_CABEL_20M": {
+    "name": "Coax kabel rulle, 20m",
+    "amount": 500
   },
-  "4": {
-    "name": "NETGEAR4",
-    "amount": 9
-  },
-  "5": {
-    "name": "NETGEAR5",
-    "amount": 5
-  },
-  "6": {
-    "name": "NETGEAR6",
-    "amount": 15
+  "F-CONN": {
+    "name": "F-Connector, 8mm",
+    "amount": 900
   }
 }
