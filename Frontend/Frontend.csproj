@@ -7,4 +7,8 @@
     <UserSecretsId>de1ed07e-0624-4ab5-9690-b2b8f0ddd289</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Temp\ClassLibrary.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace ApiBackend.Models
+﻿namespace ClassLibrary.Model
 {
     public class Product
     {

@@ -5,14 +5,22 @@ VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plukliste", "Plukliste\Plukliste.csproj", "{5F7A0C0F-E7EE-4871-B195-9FEDEBA7143E}"
 	ProjectSection(ProjectDependencies) = postProject
+		{1F635D83-B610-4C80-A920-3196AA974B02} = {1F635D83-B610-4C80-A920-3196AA974B02}
 		{2F5E68B6-2002-4300-AED3-86A850B2181A} = {2F5E68B6-2002-4300-AED3-86A850B2181A}
+		{97A1BB78-9931-40CC-A9C5-E814A68CB5BB} = {97A1BB78-9931-40CC-A9C5-E814A68CB5BB}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLibrary", "Temp\ClassLibrary.csproj", "{2F5E68B6-2002-4300-AED3-86A850B2181A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiBackend", "ApiBackend\ApiBackend.csproj", "{1F635D83-B610-4C80-A920-3196AA974B02}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2F5E68B6-2002-4300-AED3-86A850B2181A} = {2F5E68B6-2002-4300-AED3-86A850B2181A}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frontend", "Frontend\Frontend.csproj", "{97A1BB78-9931-40CC-A9C5-E814A68CB5BB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2F5E68B6-2002-4300-AED3-86A850B2181A} = {2F5E68B6-2002-4300-AED3-86A850B2181A}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

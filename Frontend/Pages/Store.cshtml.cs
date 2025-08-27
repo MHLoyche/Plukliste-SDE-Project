@@ -1,5 +1,5 @@
 ﻿
-using Frontend.Models;
+using ClassLibrary.Model;
 using Frontend.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;

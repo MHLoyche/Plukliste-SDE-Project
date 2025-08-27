@@ -1,4 +1,4 @@
-﻿namespace Frontend.Models
+﻿namespace ClassLibrary.Model
 {
     public class ApiResponse
     {

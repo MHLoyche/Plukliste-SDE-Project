@@ -1,5 +1,5 @@
 using System.Text.Json;
-using ApiBackend.Models;
+using ClassLibrary.Model;
 
 var builder = WebApplication.CreateBuilder(args);
 
