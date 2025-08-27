@@ -32,6 +32,12 @@ namespace Frontend
 
             app.MapRazorPages();
 
+            app.MapGet("/", context =>
+            {
+                context.Response.Redirect("/Storage");
+                return Task.CompletedTask;
+            });
+
             app.Run();
         }
     }

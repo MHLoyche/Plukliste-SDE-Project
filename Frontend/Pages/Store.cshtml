@@ -1,0 +1,52 @@
+﻿@page
+@model StoreModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<h1>
+    @TempData["Status"]
+</h1>
+
+<h1>Hej verden</h1>
+
+<form method="post" asp-page-handler="SubmitRequest">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Amount</th>
+                <th>Order Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Products.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Model.Products[i].ProductID
+                        <input type="hidden" name="Orders[@i].ProductID" value="@Model.Products[i].ProductID" />
+                    </td>
+                    <td>@Model.Products[i].Name</td>
+                    <td>@Model.Products[i].Amount</td>
+                    <td>
+                        <input type="number"
+                               name="Orders[@i].Amount"
+                               min="0"
+                               max="@Model.Products[i].Amount"
+                               value="0"
+                               style="width: 80px;" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+    <br />
+    <button type="submit"
+            style="padding: 8px 16px; background-color: #0078D7; color: white; border: none; border-radius: 4px; cursor: pointer;">
+        Submit Order
+    </button>
+   
+</form>

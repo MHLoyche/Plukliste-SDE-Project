@@ -1,32 +1,32 @@
 [
   {
     "ProductID": "TX-302587",
-    "Name": "Triax TD 241E Stikdås",
-    "Amount": 100
+    "Name": "Triax TD 241E Stikd\u00E5s",
+    "Amount": 84
   },
   {
     "ProductID": "NETGEAR-CM1000",
     "Name": "NETGEAR DOCSIS 3.1 (CM1000)",
-    "Amount": 85
+    "Amount": 77
   },
   {
     "ProductID": "COAX_CABEL_20M",
     "Name": "Coax kabel rulle, 20m",
-    "Amount": 500
+    "Amount": 495
   },
   {
     "ProductID": "F-CONN",
     "Name": "F-Connector, 8mm",
-    "Amount": 900
+    "Amount": 112
   },
   {
     "ProductID": "#830012",
     "Name": "Papkasse 170x105x60",
-    "Amount": 1750
+    "Amount": 1694
   },
   {
     "ProductID": "LABEL-RETUR",
     "Name": "Returlabel",
-    "Amount": 9001
+    "Amount": 9000
   }
 ]

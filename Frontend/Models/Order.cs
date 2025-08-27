@@ -1,4 +1,4 @@
-﻿namespace Frontend.models
+﻿namespace Frontend.Models
 {
     public class Order
     {

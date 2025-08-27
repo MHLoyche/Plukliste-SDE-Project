@@ -1,4 +1,4 @@
-﻿namespace Frontend.Models
+﻿namespace ApiBackend.Models
 {
     public class Product
     {

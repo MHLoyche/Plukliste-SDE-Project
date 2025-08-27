@@ -1,4 +1,4 @@
-using Frontend.models;
+using Frontend.Models;
 using Frontend.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;

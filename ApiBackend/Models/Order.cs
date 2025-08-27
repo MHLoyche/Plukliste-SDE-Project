@@ -1,9 +1,8 @@
-﻿namespace Frontend.Models
+﻿namespace ApiBackend.Models
 {
-    public class Product
+    public class Order
     {
         public string ProductID { get; set; }
-        public string Name { get; set; }
         public int Amount { get; set; }
     }
 }
