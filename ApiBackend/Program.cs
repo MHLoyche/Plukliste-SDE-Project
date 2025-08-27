@@ -31,7 +31,7 @@ app.UseCors("AllowFrontend");
 
 app.MapGet("/storage/items", () =>
 {
-    using (StreamReader reader = new StreamReader("DatabaseData/Data.json"))
+    using (StreamReader reader = new StreamReader("Database/ProductStock.json"))
     {
         string json = reader.ReadToEnd();
         return Results.Content(json, "application/json");

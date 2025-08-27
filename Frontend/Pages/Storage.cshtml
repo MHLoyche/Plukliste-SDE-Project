@@ -10,66 +10,28 @@
 <h1>Storage System</h1>
 
 
-<table id="itemsTable" border="1" cellpadding="5">
+<table>
     <thead>
         <tr>
             <th>ID</th>
-            <th>Product Name</th>
+            <th>Name</th>
             <th>Amount</th>
         </tr>
     </thead>
-    <tbody></tbody>
+    <tbody>
+        @foreach (var product in Model.Products)
+        {
+            <tr>
+                <td>@product.ProductID</td>
+                <td>@product.Name</td>
+                <td>@product.Amount</td>
+            </tr>
+        }
+    </tbody>
 </table>
 
-<button class="Refresh_Button" border="1">
-    Refresh
-</button>
-
-
-<script>
-    // Run after DOM is ready
-     document.addEventListener("DOMContentLoaded", () => {
-      // Load once when the page starts
-      loadItems();
-
-      // Attach event listener to refresh button
-      document.querySelector(".Refresh_Button")
-              .addEventListener("click", loadItems);
-    });
-
-    // Fetches the items from the API and populates the table.
-    async function loadItems() {
-      const tbody = document.querySelector("#itemsTable tbody");
-      tbody.innerHTML = ""; // optional: clear existing rows
-
-      try {
-        const res = await fetch("https://localhost:7148/storage/items");
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status} ${res.statusText}`);
-        }
-
-        const data = await res.json();
-        console.log("API response:", data); // <-- safe: inside the same scope
-
-        // Inserts the data from the JSON file.
-        for (const [id, item] of Object.entries(data)) {
-          const tr = document.createElement("tr");
-
-          const tdId = document.createElement("td");
-          tdId.textContent = id;
-
-          const tdName = document.createElement("td");
-          tdName.textContent = item.name;
-
-          const tdAmount = document.createElement("td");
-          tdAmount.textContent = item.amount;
-
-          tr.append(tdId, tdName, tdAmount);
-          tbody.appendChild(tr);
-        }
-      } catch (err) {
-        console.error("Error fetching storage items:", err);
-      }
-    }
-</script>
-
+<form method="get">
+    <button type="submit" border="1">
+        Refresh
+    </button>
+</form>

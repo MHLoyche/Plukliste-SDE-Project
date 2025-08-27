@@ -1,3 +1,5 @@
+using Frontend.Services;
+
 namespace Frontend
 {
     public class Program
@@ -8,6 +10,8 @@ namespace Frontend
 
             // Add services to the container.
             builder.Services.AddRazorPages();
+            builder.Services.AddHttpClient<ProductService>();
+           
 
             var app = builder.Build();
 
