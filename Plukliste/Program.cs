@@ -1,5 +1,4 @@
-﻿//Eksempel på funktionel kodning hvor der kun bliver brugt et model lag
-using System.Net.Quic;
+﻿using System.Net.Quic;
 using ClassLibrary;
 using ClassLibrary.Model;
 using Temp;
@@ -10,14 +9,15 @@ class PluklisteProgram {
 
     static void Main()
     {
-        //Arrange
-        char readKey = ' ';
-        List<string> files;
-        var index = -1;
-        var standardColor = Console.ForegroundColor;
-        Pluklist plukliste;
-        XMLToCSVConverter fileConv = new XMLToCSVConverter();
+        // Setup Variables
+        char readKey = ' '; // Menu Input
+        List<string> files; // List of files in export directory
+        var index = -1; // Current file index
+        var standardColor = Console.ForegroundColor; // Standard console color
+        Pluklist plukliste; // Current plukliste object read from XML
+        XMLToCSVConverter fileConv = new XMLToCSVConverter(); // Helper for CSV conversion
 
+        // Ensuring import and export folders exist
         Directory.CreateDirectory("import");
 
         if (!Directory.Exists("export"))
@@ -26,10 +26,12 @@ class PluklisteProgram {
             Console.ReadLine();
             return;
         }
+        // Get all files from export directory
         files = Directory.EnumerateFiles("export").ToList();
 
         Console.WriteLine(Directory.GetCurrentDirectory());
-        //ACT
+        
+        // Main Console program that runs until user presses 'Q'
         while (readKey != 'Q')
         {
             if (files.Count == 0)
@@ -39,24 +41,22 @@ class PluklisteProgram {
             }
             else
             {
-                if (index == -1) index = 0;
+                if (index == -1) index = 0; // Reinialize the index to redetermine current file (incase of refresh)
 
                 Console.WriteLine($"Plukliste {index + 1} af {files.Count}");
                 Console.WriteLine($"\nfile: {files[index]}");
 
-                //read file
+                // Deserialize current XML file to plukliste object
                 FileStream file = File.OpenRead(files[index]);
                 System.Xml.Serialization.XmlSerializer xmlSerializer =
                     new System.Xml.Serialization.XmlSerializer(typeof(Pluklist));
                 plukliste = (Pluklist?)xmlSerializer.Deserialize(file);
 
-                //print plukliste
+                // Print plukliste
                 if (plukliste != null && plukliste.Lines != null)
                 {
                     Console.WriteLine("\n{0, -13}{1}", "Name:", plukliste.Name);
                     Console.WriteLine("{0, -13}{1}", "Forsendelse:", plukliste.Forsendelse);
-                    //TODO: Add adresse to screen print
-
                     Console.WriteLine("\n{0,-7}{1,-9}{2,-20}{3}", "Antal", "Type", "Produktnr.", "Navn");
                     foreach (var item in plukliste.Lines)
                     {
@@ -66,48 +66,51 @@ class PluklisteProgram {
                 file.Close();
             }
 
-            //Print options
+            // Menu Options
             Console.WriteLine("\n\nOptions:");
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("Q");
             Console.ForegroundColor = standardColor;
-            Console.WriteLine("uit");
+            Console.WriteLine("uit"); // Quit
             if (index >= 0)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write("A");
                 Console.ForegroundColor = standardColor;
-                Console.WriteLine("fslut plukseddel");
+                Console.WriteLine("fslut plukseddel"); // Complete current plukliste
             }
             if (index > 0)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write("F");
                 Console.ForegroundColor = standardColor;
-                Console.WriteLine("orrige plukseddel");
+                Console.WriteLine("orrige plukseddel"); // Previous plukliste
             }
             if (index < files.Count - 1)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write("N");
                 Console.ForegroundColor = standardColor;
-                Console.WriteLine("æste plukseddel");
+                Console.WriteLine("æste plukseddel"); // Next plukliste
             }
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("G");
             Console.ForegroundColor = standardColor;
-            Console.WriteLine("enindlæs pluksedler");
+            Console.WriteLine("enindlæs pluksedler"); // Refresh
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("S");
             Console.ForegroundColor = standardColor;
-            Console.WriteLine("can plukliste");
+            Console.WriteLine("can plukliste"); // Scan plukliste
 
+            // Read user input
             readKey = Console.ReadKey().KeyChar;
-            if (readKey >= 'a') readKey -= (char)('a' - 'A'); //HACK: To upper
+            if (readKey >= 'a') readKey -= (char)('a' - 'A'); // to uppercase
             Console.Clear();
 
-            Console.ForegroundColor = ConsoleColor.Red; //status in red
+            Console.ForegroundColor = ConsoleColor.Red; //status message in red
+
+            // Switch case for menu options
             switch (readKey)
             {
                 case 'G':
@@ -123,7 +126,7 @@ class PluklisteProgram {
                     break;
                 case 'A':
                     PrintHTML.Print(plukliste);
-                    //Move files to import directory
+                    // Move file to import directory
                     var filewithoutPath = files[index].Substring(files[index].LastIndexOf('\\'));
                     File.Move(files[index], string.Format(@"import\\{0}", filewithoutPath));
                     Console.WriteLine($"Plukseddel {files[index]} afsluttet.");
@@ -134,12 +137,10 @@ class PluklisteProgram {
                     fileConv.read(plukliste);
                     Console.WriteLine($"Plukseddel {files[index]} er læst.");
                     break;
-
             }
-            Console.ForegroundColor = standardColor; //reset color
-
+            Console.ForegroundColor = standardColor; // resets color
         }
-        
+        // After quitting, converts all read pluklister to CSV
         fileConv.convert();
     }
 }
