@@ -1,4 +1,5 @@
 using System.Text.Json;
+using ClassLibrary;
 using ClassLibrary.Model;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,9 +42,9 @@ app.MapPost("/orders", async (HttpRequest request) =>
 {
     try
     {
-        var orders = await request.ReadFromJsonAsync<List<Order>>();
+        var orders = await request.ReadFromJsonAsync<Order>();
 
-        if (orders == null || !orders.Any())
+        if (orders == null || !orders.Lines.Any())
             return Results.BadRequest(new { success = false, message = "Ingen ordrer modtaget." });
 
         var filePath = "Database/ProductStock.json";
@@ -51,7 +52,7 @@ app.MapPost("/orders", async (HttpRequest request) =>
         var products = JsonSerializer.Deserialize<List<Product>>(json) ?? new List<Product>();
 
         var outOfStock = new List<object>();
-        foreach (var order in orders)
+        foreach (var order in orders.Lines)
         {
             var product = products.FirstOrDefault(p => p.ProductID == order.ProductID);
             if (product == null || product.Amount < order.Amount)
@@ -75,7 +76,7 @@ app.MapPost("/orders", async (HttpRequest request) =>
             });
         }
 
-        foreach (var order in orders)
+        foreach (var order in orders.Lines)
         {
             var product = products.First(p => p.ProductID == order.ProductID);
             product.Amount -= order.Amount;

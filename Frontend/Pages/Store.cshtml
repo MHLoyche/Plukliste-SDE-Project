@@ -11,6 +11,9 @@
 <h1>Hej verden</h1>
 
 <form method="post" asp-page-handler="SubmitRequest">
+    <input type="text" name="Navn" />
+    <input type="text" name="Adresse" />
+    <input type="text" name="Forsendelse" />
     <table>
         <thead>
             <tr>
@@ -26,7 +29,7 @@
                 <tr>
                     <td>
                         @Model.Products[i].ProductID
-                        <input type="hidden" name="Orders[@i].ProductID" value="@Model.Products[i].ProductID" />
+                        <input type="hidden" name="Items[@i].ProductID" value="@Model.Products[i].ProductID" />
                     </td>
                     <td>@Model.Products[i].Name</td>
                     <td>@Model.Products[i].Amount</td>

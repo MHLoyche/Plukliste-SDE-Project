@@ -2,12 +2,12 @@
   {
     "ProductID": "TX-302587",
     "Name": "Triax TD 241E Stikd\u00E5s",
-    "Amount": 50
+    "Amount": 45
   },
   {
     "ProductID": "NETGEAR-CM1000",
     "Name": "NETGEAR DOCSIS 3.1 (CM1000)",
-    "Amount": 73
+    "Amount": 72
   },
   {
     "ProductID": "COAX_CABEL_20M",
@@ -22,11 +22,11 @@
   {
     "ProductID": "#830012",
     "Name": "Papkasse 170x105x60",
-    "Amount": 1693
+    "Amount": 1692
   },
   {
     "ProductID": "LABEL-RETUR",
     "Name": "Returlabel",
-    "Amount": 8998
+    "Amount": 8997
   }
 ]

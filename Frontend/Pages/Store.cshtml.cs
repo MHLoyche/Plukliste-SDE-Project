@@ -1,6 +1,9 @@
 ﻿
+using ClassLibrary;
+using ClassLibrary.Enums;
 using ClassLibrary.Model;
 using Frontend.Services;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -8,19 +11,22 @@ namespace Frontend.Pages
 {
     public class StoreModel : PageModel
     {
-        private readonly ILogger<StoreModel> _logger;
+       
         private readonly ProductService _productService;
+        public Order _order = new Order();
+        public string Name = string.Empty;
+        public string Address = string.Empty;
+        public Forsendelse Forsendelse = Forsendelse.Pickup;
 
-        public StoreModel(ILogger<StoreModel> logger, ProductService productService)
+        public StoreModel(ProductService productService)
         {
-            _logger = logger;
             _productService = productService;
         }
 
         public List<Product> Products { get; set; } = new();
 
         [BindProperty]
-        public List<Order> Orders { get; set; } = new();
+        public List<Item> Items { get; set; } = new();
 
         public async Task OnGetAsync()
         {
@@ -30,7 +36,7 @@ namespace Frontend.Pages
         public async Task<IActionResult> OnPostSubmitRequest()
         {
             // Fjern ordrer med amount = 0
-            var validOrders = Orders.Where(o => o.Amount > 0).ToList();
+            var validOrders = Items.Where(o => o.Amount > 0).ToList();
 
             if (!validOrders.Any())
             {
@@ -39,7 +45,7 @@ namespace Frontend.Pages
             }
 
             // Send ordrerne til dit API via ProductService
-            var result = await _productService.SubmitOrdersAsync(validOrders);
+            var result = await _productService.SubmitOrdersAsync();
 
             if (result.Success)
             {

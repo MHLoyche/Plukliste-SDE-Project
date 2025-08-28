@@ -46,7 +46,7 @@ namespace Frontend.Services
             }
         }
 
-        public async Task<ApiResponse> SubmitOrdersAsync(List<Order> orders)
+        public async Task<ApiResponse> SubmitOrdersAsync(Order orders)
         {
             var url = "https://localhost:7148/orders";
             var json = JsonSerializer.Serialize(orders);
