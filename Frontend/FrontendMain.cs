@@ -2,7 +2,7 @@
 
 namespace Frontend
 {
-    public class Program
+    public class FrontendMain
     {
         public static void Main(string[] args)
         {
