@@ -1,0 +1,19 @@
+{
+  "Name": "PErson",
+  "Address": "personadresse",
+  "Delivery": 0,
+  "Lines": [
+    {
+      "ProductID": "TX-302587",
+      "Title": "Triax TD 241E Stikdås",
+      "Type": 0,
+      "Amount": 5
+    },
+    {
+      "ProductID": "LABEL-RETUR",
+      "Title": "Returlabel",
+      "Type": 0,
+      "Amount": 226
+    }
+  ]
+}

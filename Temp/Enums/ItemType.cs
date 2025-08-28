@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace ClassLibrary.Enums
 {
-    public enum Forsendelse
+   
+    public enum ItemType
     {
-        GLS,
-        Postnord,
-        Pickup
+        Fysisk, Print
     }
 }

@@ -1,5 +1,5 @@
 using ClassLibrary.Model;
-using Frontend.Services;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Dynamic;
@@ -16,11 +16,11 @@ namespace Frontend.Pages
             _productService = productService;
         }
 
-        public List<Product> Products { get; set; }
+        public List<Item> Items { get; set; }
 
         public async Task OnGetAsync()
         {
-            Products = await _productService.GetProductsAsync();
+            Items = await _productService.GetItemsAsync();
         }
     }
 }

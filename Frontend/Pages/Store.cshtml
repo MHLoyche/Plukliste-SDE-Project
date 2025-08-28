@@ -4,40 +4,58 @@
     ViewData["Title"] = "Home page";
 }
 
-<h1>
-    @TempData["Status"]
-</h1>
+<h1>@TempData["Status"]</h1>
 
 <h1>Hej verden</h1>
 
 <form method="post" asp-page-handler="SubmitRequest">
-    <input type="text" name="Navn" />
-    <input type="text" name="Adresse" />
-    <input type="text" name="Forsendelse" />
+    <div>
+        <label for="Order_Name">Navn</label>
+        <input asp-for="Order.Name" id="Order_Name" />
+    </div>
+
+    <div>
+        <label for="Order_Address">Address</label>
+        <input asp-for="Order.Address" id="Order_Address" />
+    </div>
+
+    <div>
+        <label for="Order_Delivery">Forsendelse</label>
+        <select asp-for="Order.Delivery" id="Order_Forsendelse">
+            @foreach (var forsendelsesType in Model.DeliveryTypes)
+            {
+                <option value="@forsendelsesType">@forsendelsesType</option>
+            }
+        </select>
+    </div>
+
     <table>
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Name</th>
-                <th>Amount</th>
-                <th>Order Amount</th>
+                <th>Navn</th>
+                <th>Lager</th>
+                <th>Antal bestilt</th>
             </tr>
         </thead>
         <tbody>
-            @for (int i = 0; i < Model.Products.Count; i++)
+            @for (int i = 0; i < Model.Items.Count; i++)
             {
                 <tr>
+                    <td>@Model.Items[i].ProductID</td>
+                    <td>@Model.Items[i].Title</td>
+                    <td>@Model.Items[i].Amount</td>
                     <td>
-                        @Model.Products[i].ProductID
-                        <input type="hidden" name="Items[@i].ProductID" value="@Model.Products[i].ProductID" />
-                    </td>
-                    <td>@Model.Products[i].Name</td>
-                    <td>@Model.Products[i].Amount</td>
-                    <td>
+                        <!-- Skjul alle felter, så de følger med i Order.Lines -->
+                        <input type="hidden" asp-for="Order.Lines[@i].ProductID" value="@Model.Items[i].ProductID" />
+                        <input type="hidden" asp-for="Order.Lines[@i].Title" value="@Model.Items[i].Title" />
+                        <input type="hidden" asp-for="Order.Lines[@i].Type" value="@Model.Items[i].Type" />
+
+                        <!-- Brugeren vælger kun antal -->
                         <input type="number"
-                               name="Orders[@i].Amount"
+                               asp-for="Order.Lines[@i].Amount"
                                min="0"
-                               max="@Model.Products[i].Amount"
+                               max="@Model.Items[i].Amount"
                                value="0"
                                style="width: 80px;" />
                     </td>
@@ -45,11 +63,10 @@
             }
         </tbody>
     </table>
-    
+
     <br />
     <button type="submit"
             style="padding: 8px 16px; background-color: #0078D7; color: white; border: none; border-radius: 4px; cursor: pointer;">
         Submit Order
     </button>
-   
 </form>

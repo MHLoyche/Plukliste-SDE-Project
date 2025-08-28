@@ -1,9 +1,7 @@
-﻿
-using ClassLibrary;
+﻿using ClassLibrary;
 using ClassLibrary.Enums;
+using ClassLibrary.HelperClasses;
 using ClassLibrary.Model;
-using Frontend.Services;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -11,50 +9,51 @@ namespace Frontend.Pages
 {
     public class StoreModel : PageModel
     {
-       
         private readonly ProductService _productService;
-        public Order _order = new Order();
-        public string Name = string.Empty;
-        public string Address = string.Empty;
-        public Forsendelse Forsendelse = Forsendelse.Pickup;
-
+        public IEnumerable<Delivery> DeliveryTypes => EnumUtil.GetValues<Delivery>();
         public StoreModel(ProductService productService)
         {
             _productService = productService;
         }
 
-        public List<Product> Products { get; set; } = new();
+        public List<Item> Items { get; set; } = new();
 
         [BindProperty]
-        public List<Item> Items { get; set; } = new();
+        public Order Order { get; set; } = new();
 
         public async Task OnGetAsync()
         {
-            Products = await _productService.GetProductsAsync();
+            Items = await _productService.GetItemsAsync();
+
+            // Initier Lines så Razor binder korrekt
+            Order.Lines = Items.Select(i => new Item
+            {
+                ProductID = i.ProductID,
+                Title = i.Title,
+                Type = i.Type,
+                Amount = 0
+            }).ToList();
         }
+
+
 
         public async Task<IActionResult> OnPostSubmitRequest()
         {
-            // Fjern ordrer med amount = 0
-            var validOrders = Items.Where(o => o.Amount > 0).ToList();
+            // Fjern linjer med amount = 0
+            Order.Lines = Order.Lines.Where(l => l.Amount > 0).ToList();
 
-            if (!validOrders.Any())
+            if (!Order.Lines.Any())
             {
                 TempData["Error"] = "Du skal vælge mindst ét produkt med en mængde > 0.";
                 return RedirectToPage();
             }
 
-            // Send ordrerne til dit API via ProductService
-            var result = await _productService.SubmitOrdersAsync();
+            // Send ordren til API via ProductService
+            var result = await _productService.SubmitOrdersAsync(Order);
 
-            if (result.Success)
-            {
-                TempData["Status"] = "Ordrene blev sendt!";
-            }
-            else
-            {
-                TempData["Status"] = $"Fejl fra API: {result.Message}";
-            }
+            TempData["Status"] = result.Success
+                ? "Ordren blev sendt!"
+                : $"Fejl fra API: {result.Message}";
 
             return RedirectToPage();
         }

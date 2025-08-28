@@ -1,11 +1,13 @@
-﻿using ClassLibrary;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml.Serialization;
 using CsvHelper;
 using CsvHelper.Configuration;
 using System.Globalization;
 using System.Net.Http.Json;
+using ClassLibrary.Model;
+using ClassLibrary.Enums;
+using ClassLibrary.Interfaces;
 
 namespace Temp
 {
@@ -75,8 +77,4 @@ namespace Temp
     }
 }
 
-public class StorageItem
-{
-    public string Name { get; set; } = "";
-    public int Amount { get; set; }
-}
+

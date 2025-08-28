@@ -1,0 +1,31 @@
+{
+  "Name": "Test",
+  "Address": "Test",
+  "Delivery": 1,
+  "Lines": [
+    {
+      "ProductID": "TX-302587",
+      "Title": "Triax TD 241E Stikdås",
+      "Type": 0,
+      "Amount": 5
+    },
+    {
+      "ProductID": "NETGEAR-CM1000",
+      "Title": "NETGEAR DOCSIS 3.1 (CM1000)",
+      "Type": 0,
+      "Amount": 5
+    },
+    {
+      "ProductID": "#830012",
+      "Title": "Papkasse 170x105x60",
+      "Type": 0,
+      "Amount": 5
+    },
+    {
+      "ProductID": "LABEL-RETUR",
+      "Title": "Returlabel",
+      "Type": 0,
+      "Amount": 5
+    }
+  ]
+}

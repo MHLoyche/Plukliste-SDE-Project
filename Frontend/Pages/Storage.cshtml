@@ -19,11 +19,11 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var product in Model.Products)
+        @foreach (var product in Model.Items)
         {
             <tr>
                 <td>@product.ProductID</td>
-                <td>@product.Name</td>
+                <td>@product.Title</td>
                 <td>@product.Amount</td>
             </tr>
         }

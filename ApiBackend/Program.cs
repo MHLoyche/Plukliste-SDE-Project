@@ -1,11 +1,19 @@
-using System.Text.Json;
-using ClassLibrary;
+﻿using ClassLibrary;
 using ClassLibrary.Model;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Gør JSON håndtering mere robust (case-insensitive + enums som strings)
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.PropertyNameCaseInsensitive = true;
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 builder.Services.AddCors(options =>
 {
@@ -28,39 +36,48 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 
-// Henter alle produkter fra lageret
+// De options vi bruger i vores egne JsonSerializer kald
+var jsonOptions = new JsonSerializerOptions
+{
+    PropertyNameCaseInsensitive = true,
+};
+jsonOptions.Converters.Add(new JsonStringEnumConverter());
+
+// GET: alle produkter
 app.MapGet("/storage/items", () =>
 {
     var json = File.ReadAllText("Database/ProductStock.json");
-    return Results.Content(json, "application/json");
+    var items = JsonSerializer.Deserialize<List<Item>>(json, jsonOptions) ?? new List<Item>();
+    return Results.Json(items, jsonOptions);
 })
 .WithName("getitems")
 .WithOpenApi();
 
-// Modtager ordrer og opdaterer lageret
-app.MapPost("/orders", async (HttpRequest request) =>
+// POST: modtag en ordre
+app.MapPost("/orders", async (Order order) =>
 {
     try
     {
-        var orders = await request.ReadFromJsonAsync<Order>();
+        Console.WriteLine("✅ DESERIALISERET ORDRE:");
+        Console.WriteLine(JsonSerializer.Serialize(order, jsonOptions));
 
-        if (orders == null || !orders.Lines.Any())
+        if (order == null || !order.Lines.Any())
             return Results.BadRequest(new { success = false, message = "Ingen ordrer modtaget." });
 
         var filePath = "Database/ProductStock.json";
         var json = await File.ReadAllTextAsync(filePath);
-        var products = JsonSerializer.Deserialize<List<Product>>(json) ?? new List<Product>();
+        var items = JsonSerializer.Deserialize<List<Item>>(json, jsonOptions) ?? new List<Item>();
 
         var outOfStock = new List<object>();
-        foreach (var order in orders.Lines)
+        foreach (var line in order.Lines)
         {
-            var product = products.FirstOrDefault(p => p.ProductID == order.ProductID);
-            if (product == null || product.Amount < order.Amount)
+            var product = items.FirstOrDefault(p => p.ProductID == line.ProductID);
+            if (product == null || product.Amount < line.Amount)
             {
                 outOfStock.Add(new
                 {
-                    ProductID = order.ProductID,
-                    Requested = order.Amount,
+                    ProductID = line.ProductID,
+                    Requested = line.Amount,
                     Available = product?.Amount ?? 0
                 });
             }
@@ -71,26 +88,32 @@ app.MapPost("/orders", async (HttpRequest request) =>
             return Results.BadRequest(new
             {
                 success = false,
-                message = "Nogle varer er ikke p� lager.",
+                message = "Nogle varer er ikke på lager.",
                 outOfStock
             });
         }
 
-        foreach (var order in orders.Lines)
+        // Træk antal fra lageret
+        foreach (var line in order.Lines)
         {
-            var product = products.First(p => p.ProductID == order.ProductID);
-            product.Amount -= order.Amount;
+            var product = items.First(p => p.ProductID == line.ProductID);
+            product.Amount -= line.Amount;
         }
 
         await File.WriteAllTextAsync(filePath,
-            JsonSerializer.Serialize(products, new JsonSerializerOptions { WriteIndented = true }));
+            JsonSerializer.Serialize(items, jsonOptions));
 
+        // Eksportér ordren
         var exportDir = Path.Combine(Directory.GetCurrentDirectory(), "Export");
         Directory.CreateDirectory(exportDir);
 
-        var exportPath = Path.Combine(exportDir, $"Kaj-Nielsen_Order_{DateTime.Now:yyyyMMdd_HHmmss}.json");
+        var exportPath = Path.Combine(exportDir, $"{order.Name}_Order_{DateTime.Now:yyyyMMdd_HHmmss}.json");
         await File.WriteAllTextAsync(exportPath,
-            JsonSerializer.Serialize(orders, new JsonSerializerOptions { WriteIndented = true }));
+    JsonSerializer.Serialize(order, new JsonSerializerOptions
+    {
+        WriteIndented = true,
+        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+    }));
 
         return Results.Ok(new { success = true, message = "Ordren blev registreret." });
     }
@@ -103,5 +126,3 @@ app.MapPost("/orders", async (HttpRequest request) =>
 .WithOpenApi();
 
 app.Run();
-
-
