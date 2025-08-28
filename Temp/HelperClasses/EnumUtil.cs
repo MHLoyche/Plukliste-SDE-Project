@@ -8,9 +8,9 @@ namespace ClassLibrary.HelperClasses
 {
     public static class EnumUtil
     {
-        public static IEnumerable<T> GetValues<T>()
+        public static IEnumerable<T> GetValues<T>() // Generic method to get all values of an enum type T where T : Enum
         {
-            return Enum.GetValues(typeof(T)).Cast<T>();
+            return Enum.GetValues(typeof(T)).Cast<T>(); // Retrieves and casts the enum values to the specified type T
         }
     }
 }
