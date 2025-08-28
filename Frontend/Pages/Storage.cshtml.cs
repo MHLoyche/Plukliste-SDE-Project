@@ -1,8 +1,5 @@
 using ClassLibrary.Model;
-
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Dynamic;
 
 
 namespace Frontend.Pages
@@ -10,14 +7,13 @@ namespace Frontend.Pages
     public class StorageModel : PageModel
     {
         private readonly ProductService _productService;
-
+        public List<Item> Items { get; set; }
         public StorageModel(ProductService productService)
         {
             _productService = productService;
         }
 
-        public List<Item> Items { get; set; }
-
+        // Når siden loades hentes Items
         public async Task OnGetAsync()
         {
             Items = await _productService.GetItemsAsync();

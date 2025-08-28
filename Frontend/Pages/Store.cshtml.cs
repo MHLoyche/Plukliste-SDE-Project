@@ -21,11 +21,13 @@ namespace Frontend.Pages
         [BindProperty]
         public Order Order { get; set; } = new();
 
+
+        // Når siden loades hentes Items og Order.Lines bliver sat til en kopi af Items
         public async Task OnGetAsync()
         {
             Items = await _productService.GetItemsAsync();
 
-            // Initier Lines så Razor binder korrekt
+            
             Order.Lines = Items.Select(i => new Item
             {
                 ProductID = i.ProductID,
@@ -36,10 +38,9 @@ namespace Frontend.Pages
         }
 
 
-
+        // Når en form bliver submittet køres metoden og Alle odre der har mere end 0 i Amount bliver sendt til backend
         public async Task<IActionResult> OnPostSubmitRequest()
         {
-            // Fjern linjer med amount = 0
             Order.Lines = Order.Lines.Where(l => l.Amount > 0).ToList();
 
             if (!Order.Lines.Any())
@@ -48,7 +49,6 @@ namespace Frontend.Pages
                 return RedirectToPage();
             }
 
-            // Send ordren til API via ProductService
             var result = await _productService.SubmitOrdersAsync(Order);
 
             TempData["Status"] = result.Success

@@ -22,7 +22,7 @@ public class ProductService
 
     }
 
-    // Henter lager fra backend
+    // Henter lager fra backenden
     public async Task<List<Item>> GetItemsAsync()
     {
         var url = "https://localhost:7148/storage/items";
@@ -48,10 +48,10 @@ public class ProductService
         }
     }
 
-    // Sender en ordre til backend
+    // Sender en ordre til backenden
     public async Task<ApiResponse> SubmitOrdersAsync(Order order)
     {
-        var url = "https://localhost:7148/orders";
+        var url = "https://localhost:7148/storage/orders";
         var json = JsonSerializer.Serialize(order, _jsonOptions);
 
         Console.WriteLine("➡️ SENDER ORDRE TIL API:");

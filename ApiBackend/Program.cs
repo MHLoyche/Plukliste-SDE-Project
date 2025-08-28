@@ -53,8 +53,26 @@ app.MapGet("/storage/items", () =>
 .WithName("getitems")
 .WithOpenApi();
 
+app.MapGet("/storage/orders", () =>
+{
+    var exportDir = Path.Combine(Directory.GetCurrentDirectory(), "Export");
+    Directory.CreateDirectory(exportDir);
+    var orders = new List<Order>();
+    var files = Directory.GetFiles(exportDir, "*_Order_*.json");
+    foreach (var file in files)
+    {
+        var json = File.ReadAllText(file);
+        var order = JsonSerializer.Deserialize<Order>(json, jsonOptions);
+        if (order != null)
+            orders.Add(order);
+    }
+    return Results.Json(orders, jsonOptions);
+}).Accepts<string>("application/json")
+  .Produces<List<Order>>(StatusCodes.Status200OK)
+  .WithName("getorders")
+  .WithOpenApi();
 // POST: modtag en ordre
-app.MapPost("/orders", async (Order order) =>
+app.MapPost("/storage/orders", async (Order order) =>
 {
     try
     {
