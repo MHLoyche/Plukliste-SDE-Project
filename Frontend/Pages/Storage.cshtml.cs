@@ -6,17 +6,17 @@ namespace Frontend.Pages
 {
     public class StorageModel : PageModel
     {
-        private readonly ProductService _productService;
-        public List<Item> Items { get; set; }
-        public StorageModel(ProductService productService)
+        private readonly ProductService _productService; // Sætter privat field til injected service
+        public List<Item> Items { get; set; } = new(); // Liste af Items som skal vises på siden
+        public StorageModel(ProductService productService) // Constructor som får injected ProductService
         {
-            _productService = productService;
+            _productService = productService; // Sætter den private field til den injected service
         }
 
-        // Når siden loades hentes Items
-        public async Task OnGetAsync()
+        
+        public async Task OnGetAsync() // Metode som bliver kaldt når siden loades
         {
-            Items = await _productService.GetItemsAsync();
+            Items = await _productService.GetItemsAsync(); // Sætter items til responsen fra GetItemsAsync
         }
     }
 }

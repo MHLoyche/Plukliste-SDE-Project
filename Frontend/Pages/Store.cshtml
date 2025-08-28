@@ -46,12 +46,10 @@
                     <td>@Model.Items[i].Title</td>
                     <td>@Model.Items[i].Amount</td>
                     <td>
-                        <!-- Skjul alle felter, så de følger med i Order.Lines -->
+                      
                         <input type="hidden" asp-for="Order.Lines[@i].ProductID" value="@Model.Items[i].ProductID" />
                         <input type="hidden" asp-for="Order.Lines[@i].Title" value="@Model.Items[i].Title" />
                         <input type="hidden" asp-for="Order.Lines[@i].Type" value="@Model.Items[i].Type" />
-
-                        <!-- Brugeren vælger kun antal -->
                         <input type="number"
                                asp-for="Order.Lines[@i].Amount"
                                min="0"

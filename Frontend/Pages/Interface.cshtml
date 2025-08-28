@@ -1,0 +1,71 @@
+﻿@page
+@model Frontend.Pages.InterfaceModel
+
+@{
+    ViewData["Title"] = "Pakkehåndtering";
+    var currentIndex = (int)(ViewData["CurrentIndex"] ?? 0);
+    var currentOrder = Model[currentIndex];
+}
+
+<div class="container mt-4">
+    <h2>Pakkehåndtering</h2>
+
+    <div class="card p-3 mb-4">
+        <h4>@currentOrder.Name</h4>
+        <p><b>Adresse:</b> @currentOrder.Address</p>
+        <p><b>Levering:</b> @currentOrder.Delivery</p>
+
+        <h5>Linjer:</h5>
+        <table class="table table-sm table-striped">
+            <thead>
+                <tr>
+                    <th>ProductID</th>
+                    <th>Titel</th>
+                    <th>Type</th>
+                    <th>Antal</th>
+                    <th>Scan</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var line in currentOrder.Lines)
+                {
+                    <tr>
+                        <td>@line.ProductID</td>
+                        <td>@line.Title</td>
+                        <td>@line.Type</td>
+                        <td>@line.Amount</td>
+                        <td>
+                            <input type="checkbox" name="scannedLines" value="@line.ProductID" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <form asp-action="Previous" method="post">
+            <input type="hidden" name="currentIndex" value="@currentIndex" />
+            <button type="submit" class="btn btn-secondary" @(currentIndex == 0 ? "disabled" : "")>
+                ← Forrige
+            </button>
+        </form>
+
+        <form asp-action="Reload" method="post">
+            <input type="hidden" name="currentIndex" value="@currentIndex" />
+            <button type="submit" class="btn btn-info">Genindlæs</button>
+        </form>
+
+        <form asp-action="Finish" method="post">
+            <input type="hidden" name="currentIndex" value="@currentIndex" />
+            <button type="submit" class="btn btn-success">Afslut</button>
+        </form>
+
+        <form asp-action="Next" method="post">
+            <input type="hidden" name="currentIndex" value="@currentIndex" />
+            <button type="submit" class="btn btn-secondary" @(currentIndex == Model.Count - 1 ? "disabled" : "")>
+                Næste →
+            </button>
+        </form>
+    </div>
+</div>
