@@ -1,20 +1,20 @@
 ﻿@page
 @model ErrorModel
 @{
-    ViewData["Title"] = "Error";
+    ViewData["Title"] = "Error"; 
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<h1 class="text-danger">Error.</h1> <!--title error-->
+<h2 class="text-danger">An error occurred while processing your request.</h2> <!--message error-->
 
-@if (Model.ShowRequestId)
+@if (Model.ShowRequestId) // if there is a request id, show it
 {
     <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+        <strong>Request ID:</strong> <code>@Model.RequestId</code> <!-- show request id-->
     </p>
 }
 
-<h3>Development Mode</h3>
+<h3>Development Mode</h3> <!--heading for development mode-->
 <p>
     Swapping to the <strong>Development</strong> environment displays detailed information about the error that occurred.
 </p>
