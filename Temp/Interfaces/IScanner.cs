@@ -9,7 +9,8 @@ namespace ClassLibrary.Interfaces
 {
     internal interface IScanner
     {
-        void convert();
-        void read(Pluklist content);
+        // Methods that will be injected in the class that implements this interface
+        void convert(); // Method to convert the picking list data
+        void read(Pluklist content); // Method to read and process the picking list
     }
 }

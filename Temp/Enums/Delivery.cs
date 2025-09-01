@@ -8,6 +8,7 @@ namespace ClassLibrary.Enums
 {
     public enum Delivery
     {
+        // Different types of delivery methods
         GLS,
         Postnord,
         Pickup

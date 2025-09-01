@@ -10,6 +10,7 @@ namespace ClassLibrary.Enums
    
     public enum ItemType
     {
+        // Different type of items that can be processed
         Fysisk, Print
     }
 }

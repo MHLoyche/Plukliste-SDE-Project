@@ -8,6 +8,7 @@ namespace ClassLibrary.Model
 {
     public class StorageItem
     {
+        // Properties of the StorageItem class used to represent an item in storage
         public string Name { get; set; } = "";
         public int Amount { get; set; }
     }
