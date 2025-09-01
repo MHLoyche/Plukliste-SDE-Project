@@ -1,19 +1,27 @@
 ﻿@page
+@using ClassLibrary.Model
 @model Frontend.Pages.InterfaceModel
 
 @{
     ViewData["Title"] = "Pakkehåndtering";
-    var currentIndex = (int)(ViewData["CurrentIndex"] ?? 0);
-    var currentOrder = Model[currentIndex];
 }
 
+@if (Model.Orders.Count == 0)
+{
+    <div class="container mt-4">
+        <div class="alert alert-info">
+            Ingen ordrer til håndtering.
+        </div>
+    </div>
+    return;
+}
 <div class="container mt-4">
     <h2>Pakkehåndtering</h2>
 
     <div class="card p-3 mb-4">
-        <h4>@currentOrder.Name</h4>
-        <p><b>Adresse:</b> @currentOrder.Address</p>
-        <p><b>Levering:</b> @currentOrder.Delivery</p>
+        <h4>@Model.CurrentOrder.Name</h4>
+        <p><b>Adresse:</b> @Model.CurrentOrder.Address</p>
+        <p><b>Levering:</b> @Model.CurrentOrder.Delivery</p>
 
         <h5>Linjer:</h5>
         <table class="table table-sm table-striped">
@@ -23,20 +31,16 @@
                     <th>Titel</th>
                     <th>Type</th>
                     <th>Antal</th>
-                    <th>Scan</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var line in currentOrder.Lines)
+                @foreach (var line in Model.CurrentOrder.Lines)
                 {
                     <tr>
                         <td>@line.ProductID</td>
                         <td>@line.Title</td>
                         <td>@line.Type</td>
                         <td>@line.Amount</td>
-                        <td>
-                            <input type="checkbox" name="scannedLines" value="@line.ProductID" />
-                        </td>
                     </tr>
                 }
             </tbody>
@@ -44,28 +48,93 @@
     </div>
 
     <div class="d-flex justify-content-between">
-        <form asp-action="Previous" method="post">
-            <input type="hidden" name="currentIndex" value="@currentIndex" />
-            <button type="submit" class="btn btn-secondary" @(currentIndex == 0 ? "disabled" : "")>
-                ← Forrige
-            </button>
-        </form>
+        <a asp-page="Interface" asp-route-index="@(Model.CurrentIndex - 1)"
+           class="btn btn-secondary @(Model.CurrentIndex == 0 ? "disabled" : "")">
+            ← Forrige
+        </a>
 
-        <form asp-action="Reload" method="post">
-            <input type="hidden" name="currentIndex" value="@currentIndex" />
-            <button type="submit" class="btn btn-info">Genindlæs</button>
-        </form>
+        <a asp-page="Interface" asp-route-index="@Model.CurrentIndex"
+           class="btn btn-info">
+            Genindlæs
+        </a>
 
-        <form asp-action="Finish" method="post">
-            <input type="hidden" name="currentIndex" value="@currentIndex" />
-            <button type="submit" class="btn btn-success">Afslut</button>
-        </form>
+        <button type="button" class="btn btn-success" onclick="scan()">
+            Scan denne ordre
+        </button>
 
-        <form asp-action="Next" method="post">
-            <input type="hidden" name="currentIndex" value="@currentIndex" />
-            <button type="submit" class="btn btn-secondary" @(currentIndex == Model.Count - 1 ? "disabled" : "")>
-                Næste →
-            </button>
-        </form>
+        <button type="button" class="btn btn-primary" onclick="submitScanned()">
+            Afslut / Send scannede
+        </button>
+
+        <a asp-page="Interface" asp-route-index="@(Model.CurrentIndex + 1)"
+           class="btn btn-secondary @(Model.CurrentIndex == Model.Orders.Count - 1 ? "disabled" : "")">
+            Næste →
+        </a>
     </div>
 </div>
+
+
+@section Scripts {
+    <script>
+        let currentIndex = @Model.CurrentIndex;
+
+        function scan() {
+            // hent listen af scannede ordrer (kun dem vi har valgt)
+            let scannedOrders = JSON.parse(localStorage.getItem("orders")) || [];
+
+            // hent current order fra server-rendered data
+            let currentOrder = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+    Model.CurrentOrder,
+    new System.Text.Json.JsonSerializerOptions {
+        PropertyNamingPolicy = null,
+        Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter() }
+    }
+));
+
+
+            // check om den allerede findes (brug Name+Address som identifikator)
+            let exists = scannedOrders.some(o =>
+                o.Name === currentOrder.Name &&
+                o.Address === currentOrder.Address &&
+                o.Delivery === currentOrder.Delivery
+            );
+
+            if (exists) {
+                alert("⚠️ Ordren er allerede tilføjet!");
+            } else {
+                scannedOrders.push(currentOrder);
+                localStorage.setItem("orders", JSON.stringify(scannedOrders));
+                alert("✅ Ordren er tilføjet til scannede!");
+            }
+
+            console.log("Scannede ordrer:", scannedOrders);
+        }
+
+        async function submitScanned() {
+            let scannedOrders = JSON.parse(localStorage.getItem("orders")) || [];
+
+            if (scannedOrders.length === 0) {
+                alert("Ingen ordrer scannet!");
+                return;
+            }
+
+            console.log("Sender ordrer til server:", scannedOrders);
+
+            const response = await fetch("/Interface?handler=Submit", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(scannedOrders)
+            });
+
+            if (response.ok) {
+                localStorage.removeItem("orders");
+                alert("✅ Scannede ordrer sendt!");
+                reload();
+
+            } else {
+                const errorText = await response.text();
+                alert("❌ Fejl ved afsendelse: " + errorText);
+            }
+        }
+    </script>
+}

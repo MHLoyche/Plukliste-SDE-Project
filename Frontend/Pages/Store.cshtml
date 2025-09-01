@@ -8,7 +8,7 @@
 
 <h1>Hej verden</h1>
 
-<form method="post" asp-page-handler="SubmitRequest">
+<form method="post" asp-page-handler="Submit">
     <div>
         <label for="Order_Name">Navn</label>
         <input asp-for="Order.Name" id="Order_Name" />
@@ -17,6 +17,7 @@
     <div>
         <label for="Order_Address">Address</label>
         <input asp-for="Order.Address" id="Order_Address" />
+       
     </div>
 
     <div>
@@ -68,3 +69,4 @@
         Submit Order
     </button>
 </form>
+

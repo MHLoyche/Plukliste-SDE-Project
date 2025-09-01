@@ -44,7 +44,7 @@ var jsonOptions = new JsonSerializerOptions
 jsonOptions.Converters.Add(new JsonStringEnumConverter());
 
 // GET: alle produkter
-app.MapGet("/storage/items", () =>
+app.MapGet("/storage/items/get", () =>
 {
     var json = File.ReadAllText("Database/ProductStock.json");
     var items = JsonSerializer.Deserialize<List<Item>>(json, jsonOptions) ?? new List<Item>();
@@ -53,7 +53,7 @@ app.MapGet("/storage/items", () =>
 .WithName("getitems")
 .WithOpenApi();
 
-app.MapGet("/storage/orders", () =>
+app.MapGet("/storage/orders/get", () =>
 {
     var exportDir = Path.Combine(Directory.GetCurrentDirectory(), "Export");
     Directory.CreateDirectory(exportDir);
@@ -72,7 +72,7 @@ app.MapGet("/storage/orders", () =>
   .WithName("getorders")
   .WithOpenApi();
 // POST: modtag en ordre
-app.MapPost("/storage/orders", async (Order order) =>
+app.MapPost("/storage/order/create", async (Order order) =>
 {
     try
     {
@@ -133,7 +133,7 @@ app.MapPost("/storage/orders", async (Order order) =>
         Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     }));
 
-        return Results.Ok(new { success = true, message = "Ordren blev registreret." });
+        return Results.Ok(new { Success = true, Message = "Ordren blev registreret." });
     }
     catch (Exception ex)
     {
@@ -142,5 +142,58 @@ app.MapPost("/storage/orders", async (Order order) =>
 })
 .WithName("submitorders")
 .WithOpenApi();
+
+app.MapPost("/storage/orders/submit", (List<Order> orders) =>
+{
+    if (orders == null || !orders.Any())
+    {
+        return Results.BadRequest(new
+        {
+            success = false,
+            message = "Ingen ordrer modtaget."
+        });
+    }
+
+    Console.WriteLine("✅ DESERIALISEREDE ORDRER:");
+    Console.WriteLine(JsonSerializer.Serialize(orders, jsonOptions));
+
+    var exportDir = Path.Combine(Directory.GetCurrentDirectory(), "Export");
+    Directory.CreateDirectory(exportDir);
+
+    var deleted = new List<string>();
+    var notFound = new List<string>();
+
+    foreach (var order in orders)
+    {
+        var pattern = $"{order.Name}_Order_*.json";
+        var matches = Directory.GetFiles(exportDir, pattern);
+
+        if (matches.Any())
+        {
+            foreach (var file in matches)
+            {
+                File.Delete(file);
+                deleted.Add(Path.GetFileName(file));
+            }
+        }
+        else
+        {
+            notFound.Add(order.Name);
+        }
+    }
+
+    return Results.Ok(new
+    {
+        success = true,
+        message = "Ordrerne er behandlet.",
+        slettedeFiler = deleted,
+        ikkeFundet = notFound
+    });
+})
+.Accepts<List<Order>>("application/json")
+.Produces(StatusCodes.Status200OK)
+.Produces(StatusCodes.Status400BadRequest)
+.WithName("submitordersbatch");
+
 
 app.Run();

@@ -1,5 +1,8 @@
 
 
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 namespace Frontend
 {
     public class FrontendMain
@@ -11,7 +14,21 @@ namespace Frontend
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddHttpClient<ProductService>();
-           
+            builder.Services.ConfigureHttpJsonOptions(options =>
+            {
+                options.SerializerOptions.PropertyNameCaseInsensitive = true;
+                options.SerializerOptions.Converters.Add(
+                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, allowIntegerValues: true)
+                );
+            });
+
+            builder.Services.AddRazorPages()
+    .AddJsonOptions(opt =>
+    {
+        opt.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
+
 
             var app = builder.Build();
 

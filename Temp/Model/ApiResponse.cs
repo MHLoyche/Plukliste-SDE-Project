@@ -1,10 +1,9 @@
 ﻿namespace ClassLibrary.Model
 {
-    public class ApiResponse
+    public class ApiResponse<T>
     {
-        // Indicates if the API call was successful
         public bool Success { get; set; }
-        // Message from the API, can be used for error details or other information
-        public string Message { get; set; }
+        public string? Message { get; set; }
+        public T? Data { get; set; }
     }
 }
