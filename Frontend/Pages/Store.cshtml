@@ -21,6 +21,15 @@
         <label for="Order_Address">Address</label>
         <input asp-for="Order.Address" id="Order_Address" />
     </div>
+    <div>
+        <label for="Order_Delivery">Forsendelse</label>
+        <select asp-for="Order.OrderType" id="Order_OrderType">
+            @foreach (var orderType in Model.OrderTypes)
+            {
+                <option value="@orderType">@orderType</option>
+            }
+        </select>
+    </div>
 
     <!-- Delivery dropdown menu -->
     <div>

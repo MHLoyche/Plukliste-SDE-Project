@@ -9,6 +9,8 @@ namespace ClassLibrary.Model
         public string Address { get; set; }
         public Delivery Delivery { get; set; }
 
+        public OrderType OrderType { get; set; }
+
         public List<Item> Lines { get; set; } = new();
     }
 }

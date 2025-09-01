@@ -1,0 +1,26 @@
+{
+  "Name": "Lars",
+  "Address": "Larsadresse",
+  "Delivery": 0,
+  "OrderType": 1,
+  "Lines": [
+    {
+      "ProductID": "COAX_CABEL_20M",
+      "Title": "Coax kabel rulle, 20m",
+      "Type": 0,
+      "Amount": 75
+    },
+    {
+      "ProductID": "#830012",
+      "Title": "Papkasse 170x105x60",
+      "Type": 0,
+      "Amount": 5
+    },
+    {
+      "ProductID": "LABEL-RETUR",
+      "Title": "Returlabel",
+      "Type": 0,
+      "Amount": 1
+    }
+  ]
+}

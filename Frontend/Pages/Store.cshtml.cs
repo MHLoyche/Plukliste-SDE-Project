@@ -12,6 +12,9 @@ namespace Frontend.Pages
 
         public IEnumerable<Delivery> DeliveryTypes =>
             EnumUtil.GetValues<Delivery>();
+
+        public IEnumerable<OrderType> OrderTypes =>
+            EnumUtil.GetValues<OrderType>();
         // Returnerer alle værdier fra Delivery-enummet vha. en helper-metode.
         // Kan bruges direkte i .cshtml til at lave dropdowns eller knapper.
 
