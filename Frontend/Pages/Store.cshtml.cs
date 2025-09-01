@@ -1,77 +1,87 @@
-﻿using ClassLibrary.Enums;
-using ClassLibrary.HelperClasses;
-using ClassLibrary.Model;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-
+﻿using ClassLibrary.Enums;                  
+using ClassLibrary.HelperClasses;          
+using ClassLibrary.Model;                  
+using Microsoft.AspNetCore.Mvc;            
+using Microsoft.AspNetCore.Mvc.RazorPages; 
 namespace Frontend.Pages
 {
     public class StoreModel : PageModel
     {
-        private readonly ProductService _productService; // out product services injected via DI
-        public IEnumerable<Delivery> DeliveryTypes => EnumUtil.GetValues<Delivery>(); // an IEnumerable list of Delivery enum values from our EnumUtil helper class
-        public List<Item> Items { get; set; } = new(); // List of Items to be displayed on the page
-        [BindProperty]
-        public Order Order { get; set; } = new(); // Binder Order med post input fields. Så det er up to date når formen bliver submittet
+        private readonly ProductService _productService;
+        // Dependency Injection: vi får en instans af ProductService ind i konstruktøren
 
-        public StoreModel(ProductService productService) // Constructor that gets the injected ProductService
+        public IEnumerable<Delivery> DeliveryTypes =>
+            EnumUtil.GetValues<Delivery>();
+        // Returnerer alle værdier fra Delivery-enummet vha. en helper-metode.
+        // Kan bruges direkte i .cshtml til at lave dropdowns eller knapper.
+
+        public List<Item> Items { get; set; } = new();
+        // Liste af produkter, som skal vises på butiks-siden.
+
+        [BindProperty]
+        public Order Order { get; set; } = new();
+        // Binder en Order-model til formularens inputfelter.
+        // Når brugeren poster formen, vil værdierne blive mappet hertil automatisk.
+
+        public StoreModel(ProductService productService)
         {
-            _productService = productService; // sets the private field to the injected service
+            _productService = productService;
+            // Gemmer DI-injectet ProductService til senere brug
         }
-        
-        public async Task OnGetAsync() // Metode som bliver kaldt når siden loades
+
+        public async Task OnGetAsync() // Kører når siden loades første gang (HTTP GET)
         {
-            ApiResponse<List<Item>> response = await _productService.GetItemsAsync(); // Kalder GetItemsAsync på ProductService
-            if (response.Success && response.Data != null) // Hvis kaldet lykkedes og der er data
+            // Henter produkter fra backend via ProductService
+            ApiResponse<List<Item>> response = await _productService.GetItemsAsync();
+
+            if (response.Success && response.Data != null) // Tjekker om API-kaldet lykkedes
             {
-                Items = response.Data; // Sætter Items til den hentede data
+                Items = response.Data; // Lagrer listen af produkter
+
+                // Initialiserer ordrelinjer med alle varer, men sætter mængde = 0 som start
                 Order.Lines = Items.Select(i => new Item
                 {
                     ProductID = i.ProductID,
                     Title = i.Title,
                     Type = i.Type,
                     Amount = 0
-                }).ToList(); // Initialiserer Order.Lines med default værdier og Amount = 0
+                }).ToList();
             }
             else
             {
-                // Håndter fejl, f.eks. log fejlbesked eller vis notifikation
+                // Hvis noget fejler: log til konsollen og vis besked i ViewData
                 Console.WriteLine($"Error fetching items: {response.Message}");
-                ViewData["status"] = $"Error fetching items: {response.Message}"; // Sætter fejlbesked i ViewData for visning på siden
+                ViewData["status"] = $"Error fetching items: {response.Message}";
             }
-
-           
         }
 
-
-        public async Task<IActionResult> OnPostSubmitAsync()
+        public async Task<IActionResult> OnPostSubmitAsync() // Kører når brugeren submitter formen (HTTP POST)
         {
+            // Fjern linjer hvor brugeren ikke har valgt nogen mængde
             Order.Lines = Order.Lines
-            .Where(l => l.Amount > 0)
-            .ToList();
+                .Where(l => l.Amount > 0)
+                .ToList();
 
-            if (!Order.Lines.Any())
+            if (!Order.Lines.Any()) // Hvis ingen varer er valgt
             {
                 TempData["Status"] = "Du skal vælge mindst 1 vare med mængde > 0.";
-                return RedirectToPage();
+                return RedirectToPage(); // Reload siden med statusbesked
             }
 
+            // Send ordre til backend for at oprette den
             ApiResponse<Order> result = await _productService.CreateOrderAsync(Order);
 
-            if (result.Success) {
-                // Hvis oprettelsen lykkedes, send brugeren til betaling
+            if (result.Success)
+            {
+                // Oprettelsen lykkedes → redirect (evt. til en betalingsside senere)
                 return RedirectToPage();
-            } else {
-                // Hvis oprettelsen fejlede, vis fejlbesked
+            }
+            else
+            {
+                // Oprettelsen fejlede → vis fejlbesked til brugeren
                 TempData["Status"] = $"Fejl ved oprettelse af ordre: {result.Message}";
                 return RedirectToPage();
             }
-
-
-
-            
         }
-
-
     }
 }
