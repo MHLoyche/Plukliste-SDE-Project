@@ -1,5 +1,9 @@
 ﻿using ClassLibrary;
 using ClassLibrary.Model;
+using CsvHelper;
+using CsvHelper.Configuration;
+using System.Globalization;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -143,7 +147,10 @@ app.MapPost("/storage/order/create", async (Order order) =>
 .WithName("submitorders")
 .WithOpenApi();
 
-app.MapPost("/storage/orders/submit", (List<Order> orders) =>
+
+
+
+app.MapPost("/storage/orders/submit", async (List<Order> orders) =>
 {
     if (orders == null || !orders.Any())
     {
@@ -154,46 +161,82 @@ app.MapPost("/storage/orders/submit", (List<Order> orders) =>
         });
     }
 
-    Console.WriteLine("✅ DESERIALISEREDE ORDRER:");
-    Console.WriteLine(JsonSerializer.Serialize(orders, jsonOptions));
-
-    var exportDir = Path.Combine(Directory.GetCurrentDirectory(), "Export");
-    Directory.CreateDirectory(exportDir);
-
-    var deleted = new List<string>();
-    var notFound = new List<string>();
-
-    foreach (var order in orders)
+    try
     {
-        var pattern = $"{order.Name}_Order_*.json";
-        var matches = Directory.GetFiles(exportDir, pattern);
+        // Hent produktlager fra JSON
+        var filePath = "Database/ProductStock.json";
+        var json = await File.ReadAllTextAsync(filePath);
+        var items = JsonSerializer.Deserialize<List<Item>>(json, jsonOptions) ?? new List<Item>();
 
-        if (matches.Any())
+        // Klargør eksport
+        var exportDir = Path.Combine(Directory.GetCurrentDirectory(), "Export");
+        Directory.CreateDirectory(exportDir);
+        var csvPath = Path.Combine(exportDir, $"{DateTime.Now:yyyyMMdd_HHmmss}_Orders.csv");
+
+        using var writer = new StreamWriter(csvPath, false, Encoding.UTF8);
+        using var csv = new CsvWriter(writer,
+            new CsvConfiguration(CultureInfo.InvariantCulture) { Delimiter = ";" });
+
+        // Header
+        csv.WriteField("ProductID");
+        csv.WriteField("Type");
+        csv.WriteField("Description");
+        csv.WriteField("Amount");        // Bestilt antal
+        csv.WriteField("CurrentStock");  // Aktuelt lager
+        csv.NextRecord();
+
+        // Rækker
+        foreach (var order in orders)
         {
-            foreach (var file in matches)
+            foreach (var line in order.Lines)
             {
-                File.Delete(file);
-                deleted.Add(Path.GetFileName(file));
+                var product = items.FirstOrDefault(p => p.ProductID == line.ProductID);
+
+                int currentStock = product?.Amount ?? 0;
+
+                csv.WriteField(line.ProductID);
+                csv.WriteField("Fysisk");
+                csv.WriteField(line.Title);
+                csv.WriteField(line.Amount);
+                csv.WriteField(currentStock);
+                csv.NextRecord();
             }
         }
-        else
-        {
-            notFound.Add(order.Name);
-        }
-    }
 
-    return Results.Ok(new
+        // Slet de gamle ordre-filer i Export mappen
+        var deletedFiles = new List<string>();
+        var orderFiles = Directory.GetFiles(exportDir, "*_Order_*.json");
+        foreach (var file in orderFiles)
+        {
+            try
+            {
+                File.Delete(file);
+                deletedFiles.Add(Path.GetFileName(file));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Kunne ikke slette fil: {file}, fejl: {ex.Message}");
+            }
+        }
+
+        return Results.Ok(new
+        {
+            success = true,
+            message = "Ordrerne er eksporteret til CSV og JSON-filer slettet.",
+            csvFil = csvPath,
+            slettedeFiler = deletedFiles
+        });
+    }
+    catch (Exception ex)
     {
-        success = true,
-        message = "Ordrerne er behandlet.",
-        slettedeFiler = deleted,
-        ikkeFundet = notFound
-    });
+        return Results.Problem($"Der opstod en fejl: {ex.Message}");
+    }
 })
 .Accepts<List<Order>>("application/json")
 .Produces(StatusCodes.Status200OK)
 .Produces(StatusCodes.Status400BadRequest)
 .WithName("submitordersbatch");
+
 
 
 app.Run();
