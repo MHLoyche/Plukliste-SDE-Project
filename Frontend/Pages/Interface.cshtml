@@ -6,6 +6,7 @@
     ViewData["Title"] = "Pakkehåndtering";
 }
 
+<!-- Show a message if there are no orders to process -->
 @if (Model.Orders.Count == 0)
 {
     <div class="container mt-4">
@@ -18,6 +19,7 @@
 <div class="container mt-4">
     <h2>Pakkehåndtering</h2>
 
+    <!-- Display the currently selected order -->
     <div class="card p-3 mb-4">
         <h4>@Model.CurrentOrder.Name</h4>
         <p><b>Adresse:</b> @Model.CurrentOrder.Address</p>
@@ -47,25 +49,31 @@
         </table>
     </div>
 
+    <!-- Navigation and action buttons  -->
     <div class="d-flex justify-content-between">
+        <!-- Go to previous order, disabled if already at first order -->
         <a asp-page="Interface" asp-route-index="@(Model.CurrentIndex - 1)"
            class="btn btn-secondary @(Model.CurrentIndex == 0 ? "disabled" : "")">
             ← Forrige
         </a>
 
+        <!-- Reload -->
         <a asp-page="Interface" asp-route-index="@Model.CurrentIndex"
            class="btn btn-info">
             Genindlæs
         </a>
 
+        <!-- Scan -->
         <button type="button" class="btn btn-success" onclick="scan()">
             Scan denne ordre
         </button>
 
+        <!-- Submit all scanned orders -->
         <button type="button" class="btn btn-primary" onclick="submitScanned()">
             Afslut / Send scannede
         </button>
 
+        <!-- Next order -->
         <a asp-page="Interface" asp-route-index="@(Model.CurrentIndex + 1)"
            class="btn btn-secondary @(Model.CurrentIndex == Model.Orders.Count - 1 ? "disabled" : "")">
             Næste →
@@ -79,20 +87,20 @@
         let currentIndex = @Model.CurrentIndex;
 
         function scan() {
-            // hent listen af scannede ordrer (kun dem vi har valgt)
+            // Load exisiting scanned orders
             let scannedOrders = JSON.parse(localStorage.getItem("orders")) || [];
 
-            // hent current order fra server-rendered data
+            // Serialize current order from razor model into a JS object
             let currentOrder = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
-    Model.CurrentOrder,
-    new System.Text.Json.JsonSerializerOptions {
-        PropertyNamingPolicy = null,
-        Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter() }
-    }
-));
+            Model.CurrentOrder,
+            new System.Text.Json.JsonSerializerOptions {
+            PropertyNamingPolicy = null,
+            Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter() }
+            }
+            ));
 
 
-            // check om den allerede findes (brug Name+Address som identifikator)
+            // Check if order already exist
             let exists = scannedOrders.some(o =>
                 o.Name === currentOrder.Name &&
                 o.Address === currentOrder.Address &&
@@ -111,6 +119,7 @@
         }
 
         async function submitScanned() {
+            // Get scanned orders from localStorage
             let scannedOrders = JSON.parse(localStorage.getItem("orders")) || [];
 
             if (scannedOrders.length === 0) {
@@ -120,18 +129,21 @@
 
             console.log("Sender ordrer til server:", scannedOrders);
 
+            // Send scanned orders to server via POST
             const response = await fetch("/Interface?handler=Submit", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(scannedOrders)
             });
 
+            // Clear scanned orders from localStorage
             if (response.ok) {
                 localStorage.removeItem("orders");
                 alert("✅ Scannede ordrer sendt!");
                 reload();
 
             } else {
+                // Show error text if submission fails
                 const errorText = await response.text();
                 alert("❌ Fejl ved afsendelse: " + errorText);
             }

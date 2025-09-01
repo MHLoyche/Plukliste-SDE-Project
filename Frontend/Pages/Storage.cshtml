@@ -12,12 +12,15 @@
 
 <table>
     <thead>
+        <!-- Table Headers -->
         <tr>
             <th>ID</th>
             <th>Name</th>
             <th>Amount</th>
         </tr>
     </thead>
+
+    <!-- placing products in table from model items -->
     <tbody>
         @foreach (var product in Model.Items)
         {

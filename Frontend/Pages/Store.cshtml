@@ -1,25 +1,28 @@
 ﻿@page
 @model StoreModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home page"; // Sets the title for the page
 }
-
+<!-- Display status message -->
 <h1>@TempData["Status"]</h1>
 
 <h1>Hej verden</h1>
 
+<!-- Form that posts to the OnPostSubmit handler in StoreModel  -->
 <form method="post" asp-page-handler="Submit">
+    <!-- Name Input -->
     <div>
         <label for="Order_Name">Navn</label>
         <input asp-for="Order.Name" id="Order_Name" />
     </div>
 
+    <!-- Address input -->
     <div>
         <label for="Order_Address">Address</label>
         <input asp-for="Order.Address" id="Order_Address" />
-       
     </div>
 
+    <!-- Delivery dropdown menu -->
     <div>
         <label for="Order_Delivery">Forsendelse</label>
         <select asp-for="Order.Delivery" id="Order_Forsendelse">
@@ -30,6 +33,7 @@
         </select>
     </div>
 
+    <!-- Product Table -->
     <table>
         <thead>
             <tr>
@@ -40,6 +44,7 @@
             </tr>
         </thead>
         <tbody>
+            <!-- Displaying product information by carrying over product data in form post -->
             @for (int i = 0; i < Model.Items.Count; i++)
             {
                 <tr>
@@ -51,6 +56,8 @@
                         <input type="hidden" asp-for="Order.Lines[@i].ProductID" value="@Model.Items[i].ProductID" />
                         <input type="hidden" asp-for="Order.Lines[@i].Title" value="@Model.Items[i].Title" />
                         <input type="hidden" asp-for="Order.Lines[@i].Type" value="@Model.Items[i].Type" />
+
+                        <!-- Input fields to enter how much product is needed -->
                         <input type="number"
                                asp-for="Order.Lines[@i].Amount"
                                min="0"
@@ -63,7 +70,9 @@
         </tbody>
     </table>
 
-    <br />
+    <br/>
+
+    <!-- Submit button -->
     <button type="submit"
             style="padding: 8px 16px; background-color: #0078D7; color: white; border: none; border-radius: 4px; cursor: pointer;">
         Submit Order
